@@ -252,7 +252,7 @@ def conanWinConfiguration(artifactoryRepos) {
     try {
         withCredentials([usernamePassword(credentialsId: 'GENERIC_CBT_SSO', passwordVariable: 'ARTIFACTORY_PASSWORD', usernameVariable: 'ARTIFACTORY_USER')]) {
             artifactoryRepoList.each { repo ->
-                powershell "conan remote add ${repo} https://artifactory.build.ge.com/api/conan/${repo} True"
+                powershell "conan remote add ${repo} https://artifactory.build.ge.com/api/conan/${repo}/RemiTest True"
                 powershell "conan user -p $ARTIFACTORY_PASSWORD -r ${repo} $ARTIFACTORY_USER"
             }
         }
@@ -270,7 +270,7 @@ def conanConfiguration(artifactoryRepos) {
     try {
         withCredentials([usernamePassword(credentialsId: 'GENERIC_CBT_SSO', passwordVariable: 'ARTIFACTORY_PASSWORD', usernameVariable: 'ARTIFACTORY_USER')]) {
             artifactoryRepoList.each { repo ->
-                sh "conan remote add ${repo} https://artifactory.build.ge.com/api/conan/${repo} True"
+                sh "conan remote add ${repo} https://artifactory.build.ge.com/api/conan/${repo}/RemiTest True"
                 sh "conan user -p $ARTIFACTORY_PASSWORD -r ${repo} $ARTIFACTORY_USER"
             }
         }
