@@ -9,11 +9,12 @@ pipeline {
         ARTIFACTORY_REPOS = "CBTGEN-SNAPSHOT,CBTGEN-SNAPSHOT"
         ARTIFACTORY_REPO_NAME = "CBTGEN-SNAPSHOT"
 
-        X86_DOCKER_IMAGE = "conanio/gcc8"
-        X86_64_DOCKER_IMAGE = "registry.gear.ge.com/devops-ctt/gcc8-with-coverity:0.5.0"
-        ARMV7_DOCKER_IMAGE = "conanio/gcc8-armv7hf"
-        ARMV7_GCC7_DOCKER_IMAGE = "conanio/gcc7-armv7hf"
-        ARMV8_DOCKER_IMAGE = "conanio/gcc8-armv8"
+        X86_DOCKER_IMAGE = "registry.gear.ge.com/cbt/gcc8-with-coverity:0.12.1"
+        X86_64_DOCKER_IMAGE = "registry.gear.ge.com/cbt/gcc8-with-coverity:0.12.1"
+        ARMV7_DOCKER_IMAGE = "conanio/gcc8-armv7hf:1.45.0"
+        ARMV7_GCC7_DOCKER_IMAGE = "conanio/gcc7-armv7hf:1.45.0"
+        ARMV8_DOCKER_IMAGE = "conanio/gcc8-armv8:1.45.0"
+		
         X86_CONAN_PROFILE = "profiles/x86"
         X86_64_CONAN_PROFILE = "profiles/x86_64"
         ARMV7_CONAN_PROFILE = "profiles/armv7"
