@@ -301,7 +301,7 @@ def getPackageVersion() {
  */
 def createPackage(profile) {
     // generate package for static library
-    sh "conan create . ${BUILD_VERSION}@${ORG_NAME}/${CHANNEL} --profile ${profile} --build=missing"
+    sh "conan create . 1.0.0@${ORG_NAME}/${CHANNEL} --profile ${profile} --build=missing"
 }
 
 /**
