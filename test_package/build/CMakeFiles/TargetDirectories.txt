@@ -1,0 +1,3 @@
+C:/Users/223083658/Downloads/helloworld_artifactory/test_package/build/CMakeFiles/example.dir
+C:/Users/223083658/Downloads/helloworld_artifactory/test_package/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/223083658/Downloads/helloworld_artifactory/test_package/build/CMakeFiles/ZERO_CHECK.dir

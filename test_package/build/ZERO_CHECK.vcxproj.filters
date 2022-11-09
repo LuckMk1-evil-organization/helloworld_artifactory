@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\223083658\Downloads\helloworld_artifactory\test_package\build\CMakeFiles\495968a77a3703fc4a3baaf42f77b0c4\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{DAB3C16E-FDBF-363E-AFC6-7C059C8AEEB2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

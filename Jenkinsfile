@@ -5,6 +5,7 @@ pipeline {
         GIT_REPO_NAME = 'helloworld_artifactory'
         PROJECT_NAME = 'helloworld'
         CHANNEL = "stable"
+		BRANCH_NAME= "main"
         ARTIFACTORY_REPOS = "CBTGEN-SNAPSHOT,CBTGEN-SNAPSHOT"
         ARTIFACTORY_REPO_NAME = "CBTGEN-SNAPSHOT"
 
