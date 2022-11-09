@@ -25,215 +25,218 @@ pipeline {
         disableConcurrentBuilds()
     }
 
-    stage('parralel build on all targer') {
-		failFast true
-		parralel {
-		
-			stage('Win64') {
-			   agent {
-					label "Windows_2019"
-				}
-				stages {
-					stage('Build Win64') {
-						steps {
-							script {
-								checkout scm
-								env.BUILD_VERSION = getWinPackageVersion()
-								echo "Version: ${BUILD_VERSION}"
-								powershell "pip install -U conan"
-								conanWinConfiguration(ARTIFACTORY_REPOS)
-								powershell "python -m pip install --quiet --upgrade pip"
-								powershell "python -m pip install cmake --quiet --upgrade --force-reinstall --no-cache"
-								powershell "conan create . ${BUILD_VERSION}@${ORG_NAME}/${CHANNEL} --build=missing"
-							}
-						}
+	stages{
+
+		stage('parralel build on all targer') {
+			failFast true
+			parralel {
+			
+				stage('Win64') {
+				   agent {
+						label "Windows_2019"
 					}
-					stage('Deploy Win64') {
-						steps {
-							script {
-								def artifactoryRepo = getArtifactoryRepo(ARTIFACTORY_REPO_NAME)
-								echo artifactoryRepo
-								powershell "conan remote list"
-								powershell "conan search ${PROJECT_NAME}/${BUILD_VERSION}@${ORG_NAME}/${CHANNEL}"
-								powershell "conan upload ${PROJECT_NAME}/${BUILD_VERSION}@${ORG_NAME}/${CHANNEL} --all -r=${artifactoryRepo}"
+					stages {
+						stage('Build Win64') {
+							steps {
+								script {
+									checkout scm
+									env.BUILD_VERSION = getWinPackageVersion()
+									echo "Version: ${BUILD_VERSION}"
+									powershell "pip install -U conan"
+									conanWinConfiguration(ARTIFACTORY_REPOS)
+									powershell "python -m pip install --quiet --upgrade pip"
+									powershell "python -m pip install cmake --quiet --upgrade --force-reinstall --no-cache"
+									powershell "conan create . ${BUILD_VERSION}@${ORG_NAME}/${CHANNEL} --build=missing"
+								}
 							}
 						}
+						stage('Deploy Win64') {
+							steps {
+								script {
+									def artifactoryRepo = getArtifactoryRepo(ARTIFACTORY_REPO_NAME)
+									echo artifactoryRepo
+									powershell "conan remote list"
+									powershell "conan search ${PROJECT_NAME}/${BUILD_VERSION}@${ORG_NAME}/${CHANNEL}"
+									powershell "conan upload ${PROJECT_NAME}/${BUILD_VERSION}@${ORG_NAME}/${CHANNEL} --all -r=${artifactoryRepo}"
+								}
+							}
+					   }
 				   }
-			   }
-			}
-
-			stage('x86_64') {
-				agent {
-					docker {
-						image X86_64_DOCKER_IMAGE
-						args "-v /var/jenkins_home/workspace/${PROJECT_NAME}/${BRANCH_NAME}/.conan:/root/.conan"
-						label 'dind'
-						reuseNode true
-					}
 				}
 
-				stages {
-					stage('Build x86_64') {
-						steps {
-							script {
-								sh "env"
-								checkout scm
-								env.BUILD_VERSION = getPackageVersion()
-								echo "Version: ${BUILD_VERSION}"
-								sh "pip install conan --upgrade"
-								conanConfiguration(ARTIFACTORY_REPOS)
-								createPackage(X86_64_CONAN_PROFILE)
-							}
+				stage('x86_64') {
+					agent {
+						docker {
+							image X86_64_DOCKER_IMAGE
+							args "-v /var/jenkins_home/workspace/${PROJECT_NAME}/${BRANCH_NAME}/.conan:/root/.conan"
+							label 'dind'
+							reuseNode true
 						}
 					}
 
-					stage('Deploy x86_64') {
-						steps {
-							script {
-								 pushToArtifactory()
+					stages {
+						stage('Build x86_64') {
+							steps {
+								script {
+									sh "env"
+									checkout scm
+									env.BUILD_VERSION = getPackageVersion()
+									echo "Version: ${BUILD_VERSION}"
+									sh "pip install conan --upgrade"
+									conanConfiguration(ARTIFACTORY_REPOS)
+									createPackage(X86_64_CONAN_PROFILE)
+								}
 							}
+						}
+
+						stage('Deploy x86_64') {
+							steps {
+								script {
+									 pushToArtifactory()
+								}
+							}
+						}
+
+					}
+				}
+
+				stage('x86 target') {
+					agent {
+						docker {
+							image X86_DOCKER_IMAGE
+							args "-v /var/jenkins_home/workspace/${PROJECT_NAME}/${BRANCH_NAME}/.conan:/root/.conan"
+							label 'dind'
+							reuseNode true
 						}
 					}
 
-				}
-			}
-
-			stage('x86 target') {
-				agent {
-					docker {
-						image X86_DOCKER_IMAGE
-						args "-v /var/jenkins_home/workspace/${PROJECT_NAME}/${BRANCH_NAME}/.conan:/root/.conan"
-						label 'dind'
-						reuseNode true
-					}
-				}
-
-				stages {
-					stage('Build x86') {
-					   steps {
-						   script {
-							   checkout scm
-							   //env.BUILD_VERSION = getPackageVersion()
-							   echo "Version: ${BUILD_VERSION}"
-							   conanConfiguration(ARTIFACTORY_REPOS)
-							   createPackage(X86_CONAN_PROFILE)
+					stages {
+						stage('Build x86') {
+						   steps {
+							   script {
+								   checkout scm
+								   //env.BUILD_VERSION = getPackageVersion()
+								   echo "Version: ${BUILD_VERSION}"
+								   conanConfiguration(ARTIFACTORY_REPOS)
+								   createPackage(X86_CONAN_PROFILE)
+							   }
 						   }
-					   }
-					}
+						}
 
-					stage('Deploy x86') {
-					   steps {
-						   script {
-							   pushToArtifactory()
+						stage('Deploy x86') {
+						   steps {
+							   script {
+								   pushToArtifactory()
+							   }
 						   }
-					   }
-					}
-				}
-			}
-
-			stage('armv7 target') {
-				agent {
-					docker {
-						image ARMV7_DOCKER_IMAGE
-						args "-v /var/jenkins_home/workspace/${PROJECT_NAME}/${BRANCH_NAME}/.conan:/root/.conan"
-						label 'dind'
-						reuseNode true
+						}
 					}
 				}
 
-				stages {
-					   stage('Build armv7') {
-						  steps {
-							  script {
-								  checkout scm
-								  //env.BUILD_VERSION = getPackageVersion()
-								  echo "Version: ${BUILD_VERSION}"
-								  sh "pip install conan --upgrade"
-								  conanConfiguration(ARTIFACTORY_REPOS)
-								  createPackage(ARMV7_CONAN_PROFILE)
-							  }
-						  }
-					   }
+				stage('armv7 target') {
+					agent {
+						docker {
+							image ARMV7_DOCKER_IMAGE
+							args "-v /var/jenkins_home/workspace/${PROJECT_NAME}/${BRANCH_NAME}/.conan:/root/.conan"
+							label 'dind'
+							reuseNode true
+						}
+					}
 
-					   stage('Deploy armv7') {
-						  steps {
-							  script {
-								  pushToArtifactory()
+					stages {
+						   stage('Build armv7') {
+							  steps {
+								  script {
+									  checkout scm
+									  //env.BUILD_VERSION = getPackageVersion()
+									  echo "Version: ${BUILD_VERSION}"
+									  sh "pip install conan --upgrade"
+									  conanConfiguration(ARTIFACTORY_REPOS)
+									  createPackage(ARMV7_CONAN_PROFILE)
+								  }
 							  }
-						  }
-					   }
-				}
-			}
+						   }
 
-			stage('armv8 target') {
-				agent {
-					docker {
-						image ARMV8_DOCKER_IMAGE
-						args "-v /var/jenkins_home/workspace/${PROJECT_NAME}/${BRANCH_NAME}/.conan:/root/.conan"
-						label 'dind'
-						reuseNode true
+						   stage('Deploy armv7') {
+							  steps {
+								  script {
+									  pushToArtifactory()
+								  }
+							  }
+						   }
 					}
 				}
 
-				stages {
-					   stage('Build armv8') {
-						  steps {
-							  script {
-								  checkout scm
-								  sh "pip install conan --upgrade"
-								  //env.BUILD_VERSION = getPackageVersion()
-								  echo "Version: ${BUILD_VERSION}"
-								  conanConfiguration(ARTIFACTORY_REPOS)
-								  createPackage(ARMV8_CONAN_PROFILE)
-							  }
-						  }
-					   }
+				stage('armv8 target') {
+					agent {
+						docker {
+							image ARMV8_DOCKER_IMAGE
+							args "-v /var/jenkins_home/workspace/${PROJECT_NAME}/${BRANCH_NAME}/.conan:/root/.conan"
+							label 'dind'
+							reuseNode true
+						}
+					}
 
-					   stage('Deploy armv8') {
-						  steps {
-							  script {
-								  pushToArtifactory()
+					stages {
+						   stage('Build armv8') {
+							  steps {
+								  script {
+									  checkout scm
+									  sh "pip install conan --upgrade"
+									  //env.BUILD_VERSION = getPackageVersion()
+									  echo "Version: ${BUILD_VERSION}"
+									  conanConfiguration(ARTIFACTORY_REPOS)
+									  createPackage(ARMV8_CONAN_PROFILE)
+								  }
 							  }
-						  }
-					   }
-				}
-			}
+						   }
 
-			stage('gcc7 armv7 target') {
-				agent {
-					docker {
-						image ARMV7_GCC7_DOCKER_IMAGE
-						args "-v /var/jenkins_home/workspace/${PROJECT_NAME}/${BRANCH_NAME}/.conan:/root/.conan"
-						label 'dind'
-						reuseNode true
+						   stage('Deploy armv8') {
+							  steps {
+								  script {
+									  pushToArtifactory()
+								  }
+							  }
+						   }
 					}
 				}
 
-				stages {
-					   stage('Build gcc7 armv7') {
-						  steps {
-							  script {
-								  checkout scm
-								  //env.BUILD_VERSION = getPackageVersion()
-								  echo "Version: ${BUILD_VERSION}"
-								  sh "pip install conan --upgrade"
-								  conanConfiguration(ARTIFACTORY_REPOS)
-								  createPackage(ARMV7_GCC7_CONAN_PROFILE)
-							  }
-						  }
-					   }
+				stage('gcc7 armv7 target') {
+					agent {
+						docker {
+							image ARMV7_GCC7_DOCKER_IMAGE
+							args "-v /var/jenkins_home/workspace/${PROJECT_NAME}/${BRANCH_NAME}/.conan:/root/.conan"
+							label 'dind'
+							reuseNode true
+						}
+					}
 
-					   stage('Deploy gcc7 armv7') {
-						  steps {
-							  script {
-								  pushToArtifactory()
+					stages {
+						   stage('Build gcc7 armv7') {
+							  steps {
+								  script {
+									  checkout scm
+									  //env.BUILD_VERSION = getPackageVersion()
+									  echo "Version: ${BUILD_VERSION}"
+									  sh "pip install conan --upgrade"
+									  conanConfiguration(ARTIFACTORY_REPOS)
+									  createPackage(ARMV7_GCC7_CONAN_PROFILE)
+								  }
 							  }
-						  }
-					   }
+						   }
+
+						   stage('Deploy gcc7 armv7') {
+							  steps {
+								  script {
+									  pushToArtifactory()
+								  }
+							  }
+						   }
+					}
 				}
 			}
 		}
-    }
+	}
 }
 
 
