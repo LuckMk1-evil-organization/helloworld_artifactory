@@ -20,6 +20,8 @@ pipeline {
         ARMV7_CONAN_PROFILE = "profiles/armv7"
         ARMV7_GCC7_CONAN_PROFILE = "profiles/armv7_gcc7"
         ARMV8_CONAN_PROFILE = "profiles/armv8"
+
+        CONAN_REVISIONS_ENABLED=1
     }
     options {
         buildDiscarder(logRotator(daysToKeepStr: '5', numToKeepStr: '10'))
@@ -30,7 +32,7 @@ pipeline {
     stages {
 
         stage('Parallel build on all target') {
-            failFast true
+            failFast false
 			parallel {
 
                 stage('Win64') {
