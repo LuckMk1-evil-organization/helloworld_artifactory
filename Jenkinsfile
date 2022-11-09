@@ -2,11 +2,11 @@ pipeline {
     agent none
     environment {
         ORG_NAME = "CBT"
-        GIT_REPO_NAME = 'helloworld_artifactory'
-        PROJECT_NAME = 'helloworld'
+        GIT_REPO_NAME = 'RemiTest'
+        PROJECT_NAME = 'RemiTest'
         CHANNEL = "stable"
 		BRANCH_NAME= "main"
-        ARTIFACTORY_REPOS = "CBTGEN-SNAPSHOT,CBTGEN-SNAPSHOT"
+        ARTIFACTORY_REPOS = "CBTGEN-SNAPSHOT"
         ARTIFACTORY_REPO_NAME = "CBTGEN-SNAPSHOT"
 
         X86_DOCKER_IMAGE = "registry.gear.ge.com/cbt/gcc8-with-coverity:0.12.1"
@@ -252,7 +252,7 @@ def conanWinConfiguration(artifactoryRepos) {
     try {
         withCredentials([usernamePassword(credentialsId: 'GENERIC_CBT_SSO', passwordVariable: 'ARTIFACTORY_PASSWORD', usernameVariable: 'ARTIFACTORY_USER')]) {
             artifactoryRepoList.each { repo ->
-                powershell "conan remote add ${repo} https://artifactory.build.ge.com/api/conan/${repo}/RemiTest True"
+                powershell "conan remote add ${repo} https://artifactory.build.ge.com/api/conan/${repo} True"
                 powershell "conan user -p $ARTIFACTORY_PASSWORD -r ${repo} $ARTIFACTORY_USER"
             }
         }
@@ -270,7 +270,7 @@ def conanConfiguration(artifactoryRepos) {
     try {
         withCredentials([usernamePassword(credentialsId: 'GENERIC_CBT_SSO', passwordVariable: 'ARTIFACTORY_PASSWORD', usernameVariable: 'ARTIFACTORY_USER')]) {
             artifactoryRepoList.each { repo ->
-                sh "conan remote add ${repo} https://artifactory.build.ge.com/api/conan/${repo}/RemiTest True"
+                sh "conan remote add ${repo} https://artifactory.build.ge.com/api/conan/${repo} True"
                 sh "conan user -p $ARTIFACTORY_PASSWORD -r ${repo} $ARTIFACTORY_USER"
             }
         }
