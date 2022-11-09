@@ -301,7 +301,7 @@ def getPackageVersion() {
  */
 def createPackage(profile) {
     // generate package for static library
-    sh "conan create . 1.0.0@${ORG_NAME}/${CHANNEL} --profile ${profile} --build=missing"
+    sh "conan create . 0.0.1@${ORG_NAME}/${CHANNEL} --profile ${profile} --build=missing"
 }
 
 /**
@@ -322,6 +322,6 @@ def pushToArtifactory() {
     def artifactoryRepo = getArtifactoryRepo(ARTIFACTORY_REPO_NAME)
     echo artifactoryRepo
     sh "conan remote list"
-    sh "conan search ${PROJECT_NAME}/${BUILD_VERSION}@${ORG_NAME}/${CHANNEL}"
-    sh "conan upload ${PROJECT_NAME}/${BUILD_VERSION}@${ORG_NAME}/${CHANNEL} --all -r=${artifactoryRepo}"
+    sh "conan search ${PROJECT_NAME}/0.0.1@${ORG_NAME}/${CHANNEL}"
+    sh "conan upload ${PROJECT_NAME}/0.0.1@${ORG_NAME}/${CHANNEL} --all -r=${artifactoryRepo}"
 }
