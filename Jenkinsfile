@@ -25,9 +25,10 @@ pipeline {
         disableConcurrentBuilds()
     }
 
-    stages {
-
+    stage('parralel build on all targer') {
+		failFast true
 		parralel {
+		
 			stage('Win64') {
 			   agent {
 					label "Windows_2019"
