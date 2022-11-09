@@ -116,7 +116,7 @@ pipeline {
                             steps {
                                 script {
                                     checkout scm
-                                    //env.BUILD_VERSION = getPackageVersion()
+                                    env.BUILD_VERSION = getPackageVersion()
                                     echo "Version: ${BUILD_VERSION}"
                                     conanConfiguration(ARTIFACTORY_REPOS)
                                     createPackage(X86_CONAN_PROFILE)
@@ -149,7 +149,7 @@ pipeline {
                             steps {
                                 script {
                                     checkout scm
-                                    //env.BUILD_VERSION = getPackageVersion()
+                                    env.BUILD_VERSION = getPackageVersion()
                                     echo "Version: ${BUILD_VERSION}"
                                     sh "pip install conan --upgrade"
                                     conanConfiguration(ARTIFACTORY_REPOS)
@@ -184,7 +184,7 @@ pipeline {
                                 script {
                                     checkout scm
                                     sh "pip install conan --upgrade"
-                                    //env.BUILD_VERSION = getPackageVersion()
+                                    env.BUILD_VERSION = getPackageVersion()
                                     echo "Version: ${BUILD_VERSION}"
                                     conanConfiguration(ARTIFACTORY_REPOS)
                                     createPackage(ARMV8_CONAN_PROFILE)
@@ -202,7 +202,7 @@ pipeline {
                     }
                 }
 
-                stage('gcc7 armv7') {
+                /*stage('gcc7 armv7') {
                     agent {
                         docker {
                             image ARMV7_GCC7_DOCKER_IMAGE
@@ -217,7 +217,7 @@ pipeline {
                             steps {
                                 script {
                                     checkout scm
-                                    //env.BUILD_VERSION = getPackageVersion()
+                                    env.BUILD_VERSION = getPackageVersion()
                                     echo "Version: ${BUILD_VERSION}"
                                     sh "pip install conan --upgrade"
                                     conanConfiguration(ARTIFACTORY_REPOS)
@@ -234,7 +234,7 @@ pipeline {
                             }
                         }
                     }
-                }
+                }*/
             } // Parallel
         }
     }
