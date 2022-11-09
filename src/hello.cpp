@@ -2,6 +2,7 @@
 #include "hello.h"
 
 void hello(){
+    std::cout << "Bonjour le monde !\n";
     #ifdef NDEBUG
     std::cout << "hello/0.1: Hello World Release!\n";
     #else
