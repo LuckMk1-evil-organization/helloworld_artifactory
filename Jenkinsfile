@@ -96,7 +96,7 @@ pipeline {
                         stage('Deploy x86_64') {
                             steps {
                                 script {
-                                    pushToArtifactory()
+                                    pushToArtifactory(ARTIFACTORY_REPOS)
                                 }
                             }
                         }
@@ -130,7 +130,7 @@ pipeline {
                         stage('Deploy x86') {
                             steps {
                                 script {
-                                    pushToArtifactory()
+                                    pushToArtifactory(ARTIFACTORY_REPOS)
                                 }
                             }
                         }
@@ -164,7 +164,7 @@ pipeline {
                         stage('Deploy armv7') {
                             steps {
                                 script {
-                                    pushToArtifactory()
+                                    pushToArtifactory(ARTIFACTORY_REPOS)
                                 }
                             }
                         }
@@ -198,7 +198,7 @@ pipeline {
                         stage('Deploy armv8') {
                             steps {
                                 script {
-                                    pushToArtifactory()
+                                    pushToArtifactory(ARTIFACTORY_REPOS)
                                 }
                             }
                         }
@@ -318,7 +318,7 @@ def getArtifactoryRepo(String repo) {
 /**
  * Upload conan package to Artifactory repository
  */
-def pushToArtifactory() {
+def pushToArtifactory(artifactoryRepos) {
     def artifactoryRepoList = "${artifactoryRepos}".split(',').collect { it as String }
 	try {
 		withCredentials([usernamePassword(credentialsId: 'GENERIC_CBT_SSO', passwordVariable: 'ARTIFACTORY_PASSWORD', usernameVariable: 'ARTIFACTORY_USER')]) {
