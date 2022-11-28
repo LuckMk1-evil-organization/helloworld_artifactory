@@ -323,7 +323,7 @@ def pushToArtifactory(artifactoryRepos) {
 	try {
 		withCredentials([usernamePassword(credentialsId: 'GENERIC_CBT_SSO', passwordVariable: 'ARTIFACTORY_PASSWORD', usernameVariable: 'ARTIFACTORY_USER')]) {
 		    artifactoryRepoList.each { repo ->
-			sh "curl -sSf -u $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD -X PUT -T * 'https://artifactory.build.ge.com/api/CBTGEN-SNAPSHOT/RemiTest/hello.zip'"
+			sh "curl -sSf -u $ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD -X PUT -T src 'https://artifactory.build.ge.com/api/CBTGEN-SNAPSHOT/RemiTest/hello.zip'"
 		    }
 		} 
 	}
