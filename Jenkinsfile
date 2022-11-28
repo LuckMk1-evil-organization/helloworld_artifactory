@@ -319,6 +319,7 @@ def getArtifactoryRepo(String repo) {
  * Upload conan package to Artifactory repository
  */
 def pushToArtifactory() {
+    def artifactoryRepoList = "${artifactoryRepos}".split(',').collect { it as String }
 	try {
 		withCredentials([usernamePassword(credentialsId: 'GENERIC_CBT_SSO', passwordVariable: 'ARTIFACTORY_PASSWORD', usernameVariable: 'ARTIFACTORY_USER')]) {
 		    artifactoryRepoList.each { repo ->
