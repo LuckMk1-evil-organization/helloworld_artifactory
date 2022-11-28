@@ -319,9 +319,15 @@ def getArtifactoryRepo(String repo) {
  * Upload conan package to Artifactory repository
  */
 def pushToArtifactory() {
+	sh "curl -sSf -u ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
+       -X PUT \
+       -T * \
+       'https://artifactory.build.ge.com/api/CBTGEN-SNAPSHOT/hello.zip'"
+	/*
     def artifactoryRepo = getArtifactoryRepo(ARTIFACTORY_REPO_NAME)
     echo artifactoryRepo
     sh "conan remote list"
     sh "conan search ${PROJECT_NAME}/0.0.1@${ORG_NAME}/${CHANNEL}"
     sh "conan upload ${PROJECT_NAME}/0.0.1@${ORG_NAME}/${CHANNEL} --all -r=${artifactoryRepo}"
+    */
 }
