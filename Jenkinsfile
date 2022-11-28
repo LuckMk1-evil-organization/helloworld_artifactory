@@ -327,7 +327,7 @@ def pushToArtifactory() {
 		} 
 	}
 	catch(err){
-		echo "curl error " + ${err}
+		echo "curl error " + err
 	    }
 	/*
     def artifactoryRepo = getArtifactoryRepo(ARTIFACTORY_REPO_NAME)
