@@ -35,7 +35,7 @@ pipeline {
             failFast false
 			parallel {
 
-                stage('Win64') {
+                /*stage('Win64') {
                     agent {
                         label "Windows_2019"
                     }
@@ -66,7 +66,7 @@ pipeline {
                             }
                         }
                     }
-                }
+                }*/
 
                 stage('x86_64') {
                     agent {
@@ -322,7 +322,7 @@ def pushToArtifactory() {
 	sh "curl -sSf -u ${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
        -X PUT \
        -T * \
-       'https://artifactory.build.ge.com/api/CBTGEN-SNAPSHOT/hello.zip'"
+       'https://artifactory.build.ge.com/api/CBTGEN-SNAPSHOT/RemiTest/hello.zip'"
 	/*
     def artifactoryRepo = getArtifactoryRepo(ARTIFACTORY_REPO_NAME)
     echo artifactoryRepo
